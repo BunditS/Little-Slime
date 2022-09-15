@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SlimeEvent : MonoBehaviour
 {
+    //สคิปสำหรับฟังก์ชันที่ถูกเรียกใช้ในระหว่างการเล่น Animation
+
     public SlimeController Sc;
     private PolygonCollider2D[] Poly;
     private Rigidbody2D rb;
@@ -65,7 +67,7 @@ public class SlimeEvent : MonoBehaviour
 
     IEnumerator CanGrap()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
         Sc.canGrap = true;
         Sc.canLand = true;
         

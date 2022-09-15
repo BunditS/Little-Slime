@@ -44,11 +44,6 @@ public class SlimeController : MonoBehaviour
         isGrapping = Physics2D.OverlapCircle(Point[1].position,.33f,WhatIsWall);
         isGrounded[0] = Physics2D.OverlapBox(Point[2].position, new Vector2(x, y), angleZ, WhatIsGround);
         isGrounded[1] = Physics2D.OverlapBox(Point[3].position, new Vector2(x, y), angleZ, WhatIsGround);
-        if(angleZ == 90 || angleZ == -90)
-        {
-            isGrounded[0] = Physics2D.OverlapBox(Point[2].position, new Vector2(y, x), WhatIsGround);
-            isGrounded[1] = Physics2D.OverlapBox(Point[3].position, new Vector2(y, x), WhatIsGround);
-        }
 
         Horizontal = Input.GetAxisRaw("Horizontal");
         Vertical = Input.GetAxisRaw("Vertical");
@@ -62,9 +57,10 @@ public class SlimeController : MonoBehaviour
             angleX = 0; angleZ = 0;
             targetRotation = Quaternion.Euler(angleX, 0, angleZ);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10);
-            if (isGrounded[0] || isGrounded[1])
+            if ((isGrounded[0] || isGrounded[1]) && canGrap)
             {
                 Anim.Play("Green Jump - Jump Land");
+                Debug.Log(1);
             }
             else Anim.Play("Green Jump - Jump Up");
         }
@@ -76,13 +72,14 @@ public class SlimeController : MonoBehaviour
             if (isGrounded[0] || isGrounded[1])
             {
                 Anim.Play("Green Jump - Jump Land");
+                Debug.Log(2);
             }
             else  Anim.Play("Green Jump - Jump Down"); 
         }
         OldPosition = NewPosition;
 
         //การควบคุม , การกดปุ่ม
-        if (isGrounded[0] || isGrounded[1])
+        if ((isGrounded[0] || isGrounded[1]) && !isGrapping)
         {
 
             if (angleZEuler >= 160 && angleZEuler <= 200)
@@ -117,11 +114,13 @@ public class SlimeController : MonoBehaviour
         
         }
 
-        if (isGrapping && (isGrounded[0] || isGrounded[1]) )
+        //เกาะกำแพง
+        if (  (isGrounded[0] || isGrounded[1]) && isGrapping)
         {
             if (canLand)
             {
                  Anim.Play("Green Jump - Jump Land");
+                Debug.Log(3);
                 canLand = false;
             }
             if (isGrounded[0] &&!isGrounded[1])
@@ -135,7 +134,7 @@ public class SlimeController : MonoBehaviour
             targetRotation = Quaternion.Euler(angleX, 0, angleZ);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10);
 
-            if(isGrounded[0] || isGrounded[1]&& isGrapping )
+            if(isGrounded[0] || isGrounded[1] )
             {
                 if (canGrap)
                 {
@@ -221,6 +220,8 @@ public class SlimeController : MonoBehaviour
         //Gizmos.DrawWireSphere(transform.position,);
         Gizmos.DrawCube(Point[2].position,new Vector3(x,y,0f));
         Gizmos.DrawCube(Point[3].position, new Vector3(x, y, 0f));
+        Gizmos.DrawWireSphere(Point[1].position, .33f);
     }
 }
 
+    
